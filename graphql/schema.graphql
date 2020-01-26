@@ -8,13 +8,13 @@ scalar Upload @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\Upload
 scalar Date @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\Date")
 
 type Query {
-    siswa: [Siswa!]! @all(model: "App\\Models\\SiswaModel")
+    users: [User!]! @paginate(defaultCount: 10, model:"App\\Models\\UserModel")
+    siswa(nama:String): [Siswa]! @paginate(builder: "App\\Murid@cari",defaultCount: 10,type: "paginator" model: "SiswaModel")
 }
 
 type Mutation {
     Auth(username: String @rules(apply: ["required"])password: String): String!
     upload(file: [Upload]!): String!
-
     CreateSiswa(
     nis: Int @rules(apply: ["required"])
     nama: String @rules(apply: ["required"])
@@ -62,9 +62,5 @@ input authCrate{
 
 
 type User {
-    id: ID!
-    name: String!
-    email: String!
-    created_at: DateTime!
-    updated_at: DateTime!
+    nama: String!
 }
