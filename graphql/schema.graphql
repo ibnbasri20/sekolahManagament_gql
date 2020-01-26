@@ -8,7 +8,7 @@ scalar Upload @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\Upload
 scalar Date @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\Date")
 
 type Query {
-    siswa(id: ID @eq): SiswaModel @find
+    siswa: [Siswa!]! @all(model: "App\\Models\\SiswaModel")
 }
 
 type Mutation {
@@ -21,11 +21,12 @@ type Mutation {
     kelas: String @rules(apply: ["required"])    
     alamat: String @rules(apply: ["required"])    
     umur: String @rules(apply: ["required"])):Siswa
+    siswaImports(file: Upload!):String @field(resolver: "App\\GraphQL\\Mutations\\siswaImports@resolve")
     deleteSiswa(id:Int):deleteResponse @field(resolver: "App\\GraphQL\\Mutations\\deleteSiswa@resolve")
+
 }
 
 type deleteResponse{
-    id_user:String,
     status:String
 }
 
