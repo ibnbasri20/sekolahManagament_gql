@@ -8,20 +8,45 @@ scalar Upload @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\Upload
 scalar Date @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\Date")
 
 type Query {
-    users: [User!]! @paginate(defaultCount: 10)
-    user(id: ID @eq): User @find
+    siswa(id: ID @eq): SiswaModel @find
 }
 
 type Mutation {
-    Auth(    username: String @rules(apply: ["required"])
-    password: String    
-): String!
+    Auth(username: String @rules(apply: ["required"])password: String): String!
     upload(file: [Upload]!): String!
+
+    CreateSiswa(
+    nis: Int @rules(apply: ["required"])
+    nama: String @rules(apply: ["required"])
+    kelas: String @rules(apply: ["required"])    
+    alamat: String @rules(apply: ["required"])    
+    umur: String @rules(apply: ["required"])):Siswa
+    deleteSiswa(id:Int):deleteResponse @field(resolver: "App\\GraphQL\\Mutations\\deleteSiswa@resolve")
+}
+
+type deleteResponse{
+    id_user:String,
+    status:String
 }
 
 type Login {
     username:String,
     password:String
+}
+
+type Siswa {
+    nis:Int,
+    nama:String,
+    kelas:String,
+    alamat:String,
+    umur:String
+}
+
+input siswaCrate{
+    nama: String @rules(apply: ["required"])
+    kelas: String @rules(apply: ["required"])    
+    alamat: String @rules(apply: ["required"])    
+    umur: String @rules(apply: ["required"])    
 }
 
 input Uploads {
