@@ -4,12 +4,17 @@ scalar DateTime @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\Date
 "Can be used as an argument to upload files using https://github.com/jaydenseric/graphql-multipart-request-spec" 
 scalar Upload @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\Upload")
 
+scalar Mixed @scalar(class: "MLL\\GraphQLScalars\\Mixed")
+
+
 "A date string with format `Y-m-d`, e.g. `2011-05-23`."
 scalar Date @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\Date")
 
 type Query {
     users: [User!]! @paginate(defaultCount: 10, model:"App\\Models\\UserModel")
-    siswa(nama:String): [Siswa]! @paginate(builder: "App\\Murid@cari",defaultCount: 10,type: "paginator" model: "SiswaModel")
+    siswa(nama:String): [Siswa]! @paginate(builder: "App\\Murid@cari",defaultCount: 10, type: "paginator" model: "SiswaModel")
+    jenis_pembayaran: [Jenis]! @paginate(defaultCount: 10, type: "paginator" model: "JenisModel")
+    pembayaran:[Pembayaran]! @paginate(efaultCount: 10, model:"PembayaranModel")
 }
 
 type Mutation {
@@ -22,12 +27,39 @@ type Mutation {
     alamat: String @rules(apply: ["required"])    
     umur: String @rules(apply: ["required"])):Siswa
     siswaImports(file: Upload!):String @field(resolver: "App\\GraphQL\\Mutations\\siswaImports@resolve")
-    deleteSiswa(id:Int):deleteResponse @field(resolver: "App\\GraphQL\\Mutations\\deleteSiswa@resolve")
+    deleteSiswa(id:Int):Response @field(resolver: "App\\GraphQL\\Mutations\\deleteSiswa@resolve")
 
+    kelasCreate(kelas:Int @rules(apply: ["required"])):Kelas! @create (model:"App\\Models\\KelasModel")
+    deleteKelas(id: ID!): Kelas @delete (model:"App\\Models\\KelasModel")
+
+
+    jenisCreate(nama_pembayaran:String, 
+    beban_kelas:String, 
+    harga:Int): Jenis! @create (model:"App\\Models\\JenisModel")
+    updateJenis(id: ID!,nama_pembayaran:String, 
+    beban_kelas:String, 
+    harga:Int): Jenis @update (model:"App\\Models\\JenisModel")
+    deleteJenis(id: ID!): Jenis @delete (model:"App\\Models\\JenisModel")
+
+    bayar(id_siswa:Int, id_jenis:Int, dibayar:Int): Response @field(resolver: "App\\GraphQL\\Mutations\\Pembayaran@resolve")
 }
 
-type deleteResponse{
+type Response{
     status:String
+}
+
+type Pembayaran {
+    id:Int,
+    id_siswa:Int,
+    id_jenis:Int,
+    dibayar:Int,
+    tgl_pembayaran:String
+}
+
+type Jenis{
+    nama_pembayaran:String,
+    harga:Int,
+    beban_kelas:String
 }
 
 type Login {
@@ -43,22 +75,10 @@ type Siswa {
     umur:String
 }
 
-input siswaCrate{
-    nama: String @rules(apply: ["required"])
-    kelas: String @rules(apply: ["required"])    
-    alamat: String @rules(apply: ["required"])    
-    umur: String @rules(apply: ["required"])    
+type Kelas {
+    kelas:Int
 }
 
-input Uploads {
-    id:ID,
-    file:Upload
-}
-
-input authCrate{
-    username: String @rules(apply: ["required"])
-    password: String @rules(apply: ["required"])    
-}
 
 
 type User {
