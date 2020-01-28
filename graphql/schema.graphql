@@ -14,7 +14,19 @@ type Query {
     users: [User!]! @paginate(defaultCount: 10, model:"App\\Models\\UserModel")
     siswa(nama:String): [Siswa]! @paginate(builder: "App\\Murid@cari",defaultCount: 10, type: "paginator" model: "SiswaModel")
     jenis_pembayaran: [Jenis]! @paginate(defaultCount: 10, type: "paginator" model: "JenisModel")
-    pembayaran:[Pembayaran]! @paginate(efaultCount: 10, model:"PembayaranModel")
+    pembayaran(id_siswa:Int @eq):[Pembayaran]! @paginate(defaultCount: 10, model:"PembayaranModel")
+    getDetail_Pembayaran(id:Int! @eq):[Pembayaran]! @paginate(defaultCount: 10, model:"PembayaranModel")
+    tunggakanSiswa(id_siswa: Int):[Tunggakan]! @paginate(builder: "App\\Murid@tunggakanSiswa",model:"PembayaranModel")
+}
+
+type Tunggakan{
+    nama:String,
+    kelas:String,
+    kelas_siswa:String,
+    nama_pembayaran:String,
+    sisa_pembayaran:Int,
+    id_jenis:String,
+    status_pembayaran:String
 }
 
 type Mutation {
@@ -22,7 +34,7 @@ type Mutation {
     upload(file: [Upload]!): String!
     CreateSiswa(
     nis: Int @rules(apply: ["required"])
-    nama: String @rules(apply: ["required"])
+    nama: String @rules(apply: ["required"])    
     kelas: String @rules(apply: ["required"])    
     alamat: String @rules(apply: ["required"])    
     umur: String @rules(apply: ["required"])):Siswa
@@ -50,16 +62,19 @@ type Response{
 
 type Pembayaran {
     id:Int,
-    id_siswa:Int,
-    id_jenis:Int,
+    siswa: Siswa @belongsTo,
+    jenis: Jenis @belongsTo
     dibayar:Int,
-    tgl_pembayaran:String
+    tgl_pembayaran:String,
+    status:String,
+    kelas_siswa:String
 }
 
 type Jenis{
+    id:Int,
     nama_pembayaran:String,
     harga:Int,
-    beban_kelas:String
+    beban_kelas:String,
 }
 
 type Login {
@@ -73,14 +88,9 @@ type Siswa {
     kelas:String,
     alamat:String,
     umur:String
+    pemabayran: [Pembayaran] @hasMany
 }
 
 type Kelas {
     kelas:Int
-}
-
-
-
-type User {
-    nama: String!
 }

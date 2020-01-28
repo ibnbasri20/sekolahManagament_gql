@@ -21,8 +21,18 @@ class Pembayaran
     {
         if(!DB::table('siswa')->where('id', $args['id_siswa'])->first()) throw new \GraphQL\Error\Error('Data Siswa Tidak ditemukan');
             if(!DB::table('jenis_pembayaran')->where('id', $args['id_jenis'])->first()) throw new \GraphQL\Error\Error('Data Jenis Pembayaran Tidak ditemukan');
-                if(DB::table('pembayaran')->where('id_siswa', $args['id_siswa'])->where('id_jenis', $args['id_jenis'])->first()) throw new \GraphQL\Error\Error('Sudah Terbayar Dibayar');            
-            PembayaranModel::create($args);
+                if(DB::table('pembayaran')->where('id_siswa', $args['id_siswa'])->where('id_jenis', $args['id_jenis'])->first()) throw new \GraphQL\Error\Error('Sudah Terbayar');
+                    $total_wajib = DB::table('jenis_pembayaran')->where('id', $args['id_jenis'])->first()->harga;
+                    $kelas = DB::table('siswa')->where('id', $args['id_siswa'])->first()->kelas;
+                $data = array(
+                    'id_siswa'          => $args['id_siswa'],
+                    'id_jenis'          => $args['id_jenis'],
+                    'dibayar'           => $args['dibayar'],
+                    'kelas_siswa'       => $kelas,
+                    'sisa_pembayaran'   => $total_wajib - $args['dibayar'],
+                    'status'            => $total_wajib - $args['dibayar'] == 0 ? "Lunas" : "Belum Lunas"
+                );
+            PembayaranModel::create($data);
         return [
             'status'    => "Berhasil Membayar"
         ];

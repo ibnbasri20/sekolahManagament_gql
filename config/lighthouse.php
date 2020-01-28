@@ -161,8 +161,16 @@ return [
     | Debugging is only applied if the global Laravel debug config is set to true.
     |
     */
-
-    'debug' => \GraphQL\Error\Debug::INCLUDE_DEBUG_MESSAGE,
+        /*
+    |--------------------------------------------------------------------------
+    | Debug
+    |--------------------------------------------------------------------------
+    |
+    | Control the debug level as described in http://webonyx.github.io/graphql-php/error-handling/
+    | Debugging is only applied if the global Laravel debug config is set to true.
+    |
+    */
+    'debug' => \GraphQL\Error\Debug::INCLUDE_DEBUG_MESSAGE || Debug::RETHROW_INTERNAL_EXCEPTIONS,
 
     /*
     |--------------------------------------------------------------------------

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class Pembayaran extends Migration
+class Riwayat extends Migration
 {
     /**
      * Run the migrations.
@@ -13,15 +13,12 @@ class Pembayaran extends Migration
      */
     public function up()
     {
-        Schema::create('pembayaran', function(Blueprint $table){
+        Schema::create('riwayat_pembayaran', function(Blueprint $table){
             $table->bigIncrements('id');
             $table->unsignedBigInteger('id_jenis')->index();
             $table->unsignedBigInteger('id_siswa')->index();
             $table->integer('dibayar');
-            $table->integer('sisa_pembayaran');
-            $table->integer('kelas_siswa');
             $table->timestamp('tgl_pembayaran');
-            $table->enum('status', ['Belum Lunas', 'Lunas']);
             $table->foreign('id_jenis')->references('id')->on('jenis_pembayaran')->onDelete('cascade');
             $table->foreign('id_siswa')->references('id')->on('siswa')->onDelete('cascade');
         });
@@ -34,6 +31,6 @@ class Pembayaran extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('pembayaran');
+        Schema::dropIfExists('riwayat_pembayaran'); 
     }
 }
