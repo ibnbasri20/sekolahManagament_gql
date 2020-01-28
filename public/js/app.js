@@ -78073,7 +78073,7 @@ react_dom__WEBPACK_IMPORTED_MODULE_1___default.a.render(react__WEBPACK_IMPORTED_
 }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_2__["Redirect"], {
   from: "/",
   to: "/admin/index"
-}))), document.getElementById('root'));
+}))), document.getElementById("root"));
 
 /***/ }),
 

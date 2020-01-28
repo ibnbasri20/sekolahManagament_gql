@@ -9,10 +9,10 @@
         <!-- Fonts -->
         <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet">
 
-        <script src="{{asset('/js/app.js')}}"></script>
-
     </head>
     <body>
         <div id="root"></div>
+        <script src="{{asset('/js/app.js')}}"></script>
+
     </body>
 </html>
